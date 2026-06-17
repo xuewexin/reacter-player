@@ -163,11 +163,4 @@ src/
 
 ## 📄 License
 
-MIT License — 仅供学习交流使用。
-=======
-前提需要安装npm环境
-
-然后通过npm install安装依赖
-
-再通过npm start就可以启动项目了
->>>>>>> 89303b92728ff0b99f9ba8ccbe10a62a786546c9
+仅供学习交流使用。
