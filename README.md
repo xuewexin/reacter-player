@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🎵 React Music Player
 
 一个基于 React 18 + Vite 构建的在线音乐播放器，支持音乐搜索、在线播放、歌词显示、歌单/专辑/艺人浏览、收藏和历史记录等功能。
@@ -163,3 +164,10 @@ src/
 ## 📄 License
 
 MIT License — 仅供学习交流使用。
+=======
+前提需要安装npm环境
+
+然后通过npm install安装依赖
+
+再通过npm start就可以启动项目了
+>>>>>>> 89303b92728ff0b99f9ba8ccbe10a62a786546c9
