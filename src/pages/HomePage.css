@@ -1,0 +1,614 @@
+/* ================================================================
+   HomePage.css — 全宽布局 + 优化样式
+   ================================================================ */
+
+/* 页面容器 — 全宽 */
+.home-page {
+  width: 100%;
+  padding: 32px 0;  /* 去掉左右padding，各section自行控制内边距 */
+  min-height: calc(100vh - 180px);
+}
+
+/* 分区 */
+.section {
+  margin-bottom: 48px;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-icon {
+  display: flex;
+  align-items: center;
+  color: var(--primary);
+}
+
+.section-more {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 18px;
+  border-radius: 20px;
+  transition: all 0.2s;
+}
+
+.section-more:hover {
+  color: var(--text-primary);
+  border-color: var(--text-secondary);
+  background: var(--bg-card-hover);
+}
+
+/* ================================================================
+   Hero Section — Cover Flow 3D 轮播
+   中间卡片高亮放大，前后卡片逐级缩小/降低透明度/模糊
+   ================================================================ */
+
+.hero-section {
+  margin-bottom: 40px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.hero-section .section-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+/* ---- Cover Flow 外层容器 ---- */
+.coverflow {
+  position: relative;
+  width: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+  cursor: grab;
+  padding: 0 60px; /* 给箭头留空间 */
+}
+
+.coverflow:active { cursor: default; }
+
+/* ---- 3D 舞台（perspective 在此生效） ---- */
+.coverflow-stage {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+/* ---- 边缘渐隐遮罩 ---- */
+.coverflow-edge-left,
+.coverflow-edge-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 180px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.coverflow-edge-left {
+  left: 0;
+  background: linear-gradient(to right, var(--bg-dark) 5%, transparent 100%);
+}
+
+.coverflow-edge-right {
+  right: 0;
+  background: linear-gradient(to left, var(--bg-dark) 5%, transparent 100%);
+}
+
+/* ---- 卡片 — 绝对定位 + 3D transform（纯图片） ---- */
+.coverflow-card {
+  position: absolute;
+  width: 480px;
+  max-width: 72vw;
+  aspect-ratio: 21 / 9;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-card-hover);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transform-origin: center center;
+  transition:
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity    0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    filter     0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s ease;
+  cursor: pointer;
+}
+
+/* 激活卡片 — 高亮阴影 + 发光 */
+.coverflow-card.is-active {
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(29, 185, 84, 0.2),
+    0 0 40px rgba(29, 185, 84, 0.1);
+}
+
+/* ---- 卡片图片（填充卡片，标题浮于其上） ---- */
+.coverflow-card-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: var(--bg-card-hover);
+  transition: transform 0.5s ease;
+}
+
+.coverflow-card.is-active:hover .coverflow-card-img {
+  transform: scale(1.04);
+}
+
+/* ---- 卡片标题浮层 ---- */
+.coverflow-card-title-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px 16px 14px;
+  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.coverflow-card-subtitle-text {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- 左右箭头 ---- */
+.coverflow-arrow {
+  position: absolute;
+  top: 44%;
+  transform: translateY(-50%);
+  z-index: 30;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.coverflow:hover .coverflow-arrow { opacity: 0.85; }
+
+.coverflow-arrow:hover {
+  opacity: 1 !important;
+  background: var(--bg-card-hover);
+  border-color: var(--primary);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.coverflow-arrow-left  { left: 12px; }
+.coverflow-arrow-right { right: 12px; }
+
+/* ---- 分页器 ---- */
+.coverflow-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.coverflow-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  padding: 0;
+}
+
+.coverflow-dot:hover { background: var(--text-secondary); }
+
+.coverflow-dot.is-active {
+  width: 28px;
+  border-radius: 5px;
+  background: var(--primary);
+  box-shadow: 0 2px 8px rgba(29, 185, 84, 0.4);
+}
+
+/* ================================================================
+   热门推荐 — 响应式网格
+   ================================================================ */
+
+.trending-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 24px;
+}
+
+.trending-card {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.trending-card:hover { transform: translateY(-6px); }
+
+.trending-cover-wrapper {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  aspect-ratio: 1;
+}
+
+.trending-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.trending-rank-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 30px;
+  height: 30px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.trending-play-overlay {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 44px;
+  height: 44px;
+  background: var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 16px rgba(29, 185, 84, 0.4);
+}
+
+.trending-card:hover .trending-play-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.play-icon { display: flex; align-items: center; justify-content: center; }
+
+.trending-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trending-artist {
+  font-size: 12px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ================================================================
+   瞩目之星 — 响应式网格
+   ================================================================ */
+
+.spotlight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+.artist-spotlight-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 28px 18px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.artist-spotlight-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), #1ed760);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.artist-spotlight-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--primary);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.artist-spotlight-card:hover::before { opacity: 1; }
+
+.spotlight-rank {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.spotlight-avatar-wrapper {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 16px;
+  border: 3px solid var(--border-color);
+  transition: border-color 0.3s ease;
+}
+
+.artist-spotlight-card:hover .spotlight-avatar-wrapper { border-color: var(--primary); }
+
+.spotlight-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.artist-spotlight-card:hover .spotlight-avatar { transform: scale(1.08); }
+
+.spotlight-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.spotlight-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ================================================================
+   新歌精选 — 列表
+   ================================================================ */
+
+.song-list { display: flex; flex-direction: column; gap: 2px; }
+
+.song-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 10px 16px; border-radius: 10px;
+  cursor: pointer; transition: background 0.2s;
+}
+
+.song-row:hover { background: var(--bg-card-hover); }
+
+.song-cover { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+.song-info { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.song-title { font-size: 14px; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.song-artist { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.song-duration { font-size: 12px; color: var(--text-muted); min-width: 48px; text-align: right; flex-shrink: 0; }
+
+.song-more-btn {
+  display: flex; align-items: center; justify-content: center;
+  background: none; border: none;
+  color: var(--text-muted);
+  cursor: pointer; padding: 4px 8px; border-radius: 4px;
+  opacity: 0; transition: all 0.2s; flex-shrink: 0;
+}
+
+.song-row:hover .song-more-btn { opacity: 1; }
+.song-more-btn:hover { color: var(--text-primary); background: var(--bg-card); }
+
+/* ================================================================
+   排行榜
+   ================================================================ */
+
+.chart-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.chart-panel.city-chart { margin-bottom: 0; }
+
+.chart-panel-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+}
+
+.chart-panel-title { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+
+.city-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.city-tab {
+  padding: 6px 14px;
+  border: 1px solid var(--border-color);
+  background: transparent; color: var(--text-secondary);
+  font-size: 12px; font-weight: 500;
+  border-radius: 16px; cursor: pointer;
+  transition: all 0.2s;
+}
+
+.city-tab:hover { color: var(--text-primary); border-color: var(--text-secondary); }
+.city-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+.chart-list { display: flex; flex-direction: column; }
+
+.rank-song-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 9px 14px; border-radius: 10px;
+  cursor: pointer; transition: background 0.2s;
+}
+
+.rank-song-row:hover { background: var(--bg-card-hover); }
+
+.rank-num {
+  width: 36px; text-align: center;
+  font-size: 16px; font-weight: 800;
+  color: var(--text-muted); flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.rank-num.rank-top {
+  color: var(--primary); font-size: 18px;
+  text-shadow: 0 0 8px rgba(29, 185, 84, 0.3);
+}
+
+.rank-cover { width: 46px; height: 46px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+.rank-info { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.rank-title { font-size: 14px; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rank-artist { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rank-duration { font-size: 12px; color: var(--text-muted); min-width: 48px; text-align: right; flex-shrink: 0; }
+
+/* 占位 */
+.section-empty {
+  padding: 48px 20px; text-align: center;
+  color: var(--text-muted); font-size: 14px;
+  background: var(--bg-card); border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.page-footer-space { height: 40px; }
+
+/* ================================================================
+   图片兜底
+   ================================================================ */
+
+.trending-cover-fallback {
+  width: 100%; height: 100%;
+  position: absolute; top:0;left:0;right:0;bottom:0;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted);
+  background: var(--bg-card-hover);
+}
+
+.song-cover-fallback,
+.rank-cover-fallback {
+  width: 46px; height: 46px; min-width: 46px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted);
+  background: var(--bg-card-hover); flex-shrink: 0;
+}
+.song-cover-fallback { width: 50px; height: 50px; min-width: 50px; }
+.spotlight-avatar-fallback {
+  width: 100%; height: 100%; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; font-weight: 700;
+  color: var(--primary); background: var(--bg-card-hover);
+}
+
+/* ================================================================
+   响应式
+   ================================================================ */
+
+@media (max-width: 1200px) {
+  .home-page { padding: 24px 0; }
+  .section { padding-left: 24px; padding-right: 24px; }
+  .hero-section .section-title { padding-left: 24px; padding-right: 24px; }
+}
+
+@media (max-width: 900px) {
+  .coverflow { padding: 0 44px; }
+  .coverflow-stage { height: 150px; }
+  .coverflow-card { width: 380px; max-width: 68vw; border-radius: 10px; }
+  .coverflow-card-subtitle-text { font-size: 17px; }
+  .coverflow-edge-left, .coverflow-edge-right { width: 100px; }
+  .coverflow-arrow { width: 38px; height: 38px; opacity: 0.7; }
+}
+
+@media (max-width: 768px) {
+  .home-page { padding: 16px 0; }
+  .section { padding-left: 16px; padding-right: 16px; }
+  .hero-section .section-title { font-size: 22px; padding-left: 16px; padding-right: 16px; }
+  .section-title { font-size: 18px; }
+  .trending-grid { grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .spotlight-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .chart-panel { padding: 16px; }
+  .section { margin-bottom: 32px; }
+  .trending-rank-badge { width: 24px; height: 24px; font-size: 11px; }
+  .trending-play-overlay { width: 36px; height: 36px; }
+  .artist-spotlight-card { padding: 16px 12px 14px; }
+  .spotlight-avatar-wrapper { width: 80px; height: 80px; }
+  .spotlight-name { font-size: 14px; }
+  .rank-num { width: 26px; font-size: 14px; }
+  .rank-num.rank-top { font-size: 16px; }
+}
+
+@media (max-width: 600px) {
+  .coverflow { padding: 0 32px; }
+  .coverflow-stage { height: 120px; }
+  .coverflow-card { width: 280px; max-width: 64vw; border-radius: 8px; }
+  .coverflow-card-subtitle-text { font-size: 14px; }
+  .coverflow-card-title-bar { padding: 16px 10px 10px; }
+  .coverflow-edge-left, .coverflow-edge-right { width: 60px; }
+  .coverflow-arrow { width: 32px; height: 32px; }
+  .coverflow-arrow-left  { left: 4px; }
+  .coverflow-arrow-right { right: 4px; }
+  .trending-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+}
+
+@media (max-width: 480px) {
+  .home-page { padding: 12px 0; }
+  .section { padding-left: 10px; padding-right: 10px; }
+  .hero-section .section-title { padding-left: 10px; padding-right: 10px; }
+  .spotlight-grid { grid-template-columns: 1fr; }
+}

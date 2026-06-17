@@ -1,0 +1,307 @@
+/* ================================================================
+   PlaylistPage.css — 歌单页面样式
+   ================================================================ */
+
+.playlist-page {
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 40px 80px;
+  min-height: calc(100vh - 180px);
+}
+
+/* 返回按钮 */
+.pl-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  transition: all 0.2s;
+}
+
+.pl-back-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-card-hover);
+}
+
+/* 加载/错误 */
+.pl-loading,
+.pl-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  gap: 16px;
+  color: var(--text-secondary);
+}
+
+.pl-loading .loading-spinner {
+  width: 44px; height: 44px;
+  border: 3px solid var(--bg-card-hover);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: plSpin 0.8s linear infinite;
+}
+
+@keyframes plSpin { to { transform: rotate(360deg); } }
+
+.pl-retry-btn {
+  padding: 10px 24px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.pl-retry-btn:hover { background: var(--primary-dark); }
+
+/* 歌单头部 */
+.pl-header {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 32px;
+  padding: 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+}
+
+.pl-cover-wrapper {
+  width: 210px;
+  height: 210px;
+  border-radius: 14px;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.pl-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pl-cover-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-card-hover);
+  color: var(--text-muted);
+}
+
+.pl-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.pl-type-tag {
+  display: inline-block;
+  padding: 5px 14px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 12px;
+  width: fit-content;
+}
+
+.pl-name {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.pl-creator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.pl-creator-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.pl-meta {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.pl-actions {
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.pl-play-all-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(29, 185, 84, 0.3);
+}
+
+.pl-play-all-btn:hover {
+  background: var(--primary-dark);
+  transform: scale(1.04);
+  box-shadow: 0 6px 24px rgba(29, 185, 84, 0.45);
+}
+
+/* 歌曲列表 */
+.pl-song-list {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.pl-song-header {
+  padding: 20px 28px 14px;
+}
+
+.pl-song-header-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.pl-empty {
+  padding: 48px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.pl-song-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 28px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.pl-song-row:hover { background: var(--bg-card-hover); }
+.pl-song-row:hover .pl-song-play-btn { opacity: 1; }
+
+.pl-song-num {
+  width: 32px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.pl-song-cover {
+  width: 46px; height: 46px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--bg-card-hover);
+}
+
+.pl-song-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pl-song-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pl-song-artist {
+  font-size: 12px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pl-song-dur {
+  font-size: 12px;
+  color: var(--text-muted);
+  min-width: 48px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.pl-song-play-btn {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.pl-song-play-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(29, 185, 84, 0.4);
+}
+
+/* 响应式 */
+@media (max-width: 1200px) {
+  .playlist-page { padding: 24px 24px 80px; }
+}
+
+@media (max-width: 768px) {
+  .playlist-page { padding: 16px 16px 80px; }
+
+  .pl-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+    padding: 24px;
+  }
+
+  .pl-cover-wrapper { width: 170px; height: 170px; }
+  .pl-name { font-size: 24px; }
+  .pl-header-info { align-items: center; }
+  .pl-creator { justify-content: center; }
+
+  .pl-song-row { padding: 10px 18px; gap: 10px; }
+  .pl-song-play-btn { opacity: 1; width: 32px; height: 32px; }
+}

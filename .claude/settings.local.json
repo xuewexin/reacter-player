@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Skill(run)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
+      "Bash(node *)",
+      "Bash(npx vite *)",
+      "Bash(curl -s --max-time 10 \"https://api.bugpk.com/api/163_music?type=playlist&id=3778678\" -H \"User-Agent: Mozilla/5.0\")"
+    ]
+  }
+}

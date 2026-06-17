@@ -1,0 +1,162 @@
+.browse-page {
+  padding: 24px 32px 80px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.browse-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.browse-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.browse-back {
+  background: var(--bg-card-hover);
+  border: none;
+  color: var(--text-secondary);
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.browse-back:hover { background: var(--bg-card); color: var(--text-primary); }
+
+.browse-empty {
+  text-align: center;
+  padding: 80px 0;
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+/* ======== 歌手网格 ======== */
+.browse-artist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+}
+
+.browse-artist-card {
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.browse-artist-card:hover { transform: translateY(-4px); }
+
+.browse-artist-avatar {
+  width: 140px; height: 140px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.browse-artist-avatar img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.browse-artist-fallback {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-card-hover);
+  color: var(--text-muted);
+  font-size: 40px; font-weight: 700;
+}
+
+.browse-artist-name {
+  font-size: 15px; font-weight: 600;
+  color: var(--text-primary);
+}
+.browse-artist-meta {
+  font-size: 12px; color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ======== 歌曲行 ======== */
+.browse-song-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.browse-song-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.browse-song-row:hover { background: var(--bg-card-hover); }
+
+.browse-song-index {
+  width: 24px;
+  font-size: 14px; font-weight: 600;
+  color: var(--text-muted);
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.browse-song-cover {
+  width: 48px; height: 48px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--bg-card-hover);
+}
+.browse-song-cover img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.browse-song-fallback {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted);
+}
+
+.browse-song-info {
+  flex: 1; min-width: 0;
+}
+.browse-song-name {
+  font-size: 14px; font-weight: 500;
+  color: var(--text-primary);
+  display: block;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.browse-song-artist {
+  font-size: 12px; color: var(--text-muted);
+  display: block;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.browse-song-duration {
+  font-size: 12px; color: var(--text-muted);
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.browse-song-play {
+  width: 32px; height: 32px;
+  background: var(--primary);
+  border: none; border-radius: 50%;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+.browse-song-row:hover .browse-song-play { opacity: 1; }
+
+@media (max-width: 640px) {
+  .browse-page { padding: 16px; }
+  .browse-artist-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 14px; }
+  .browse-artist-avatar { width: 100px; height: 100px; }
+}

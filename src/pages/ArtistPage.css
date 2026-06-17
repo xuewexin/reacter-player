@@ -1,0 +1,352 @@
+/* ================================================================
+   ArtistPage.css — 艺人页面样式
+   ================================================================ */
+
+.artist-page {
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 40px 80px;
+  min-height: calc(100vh - 180px);
+}
+
+/* 返回按钮 */
+.artist-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  transition: all 0.2s;
+}
+
+.artist-back-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-card-hover);
+}
+
+/* 艺人头部 */
+.artist-header {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  margin-bottom: 32px;
+  padding: 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+}
+
+.artist-header-avatar {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 3px solid var(--border-color);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.artist-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.artist-avatar-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64px;
+  font-weight: 700;
+  color: var(--primary);
+  background: var(--bg-card-hover);
+}
+
+.artist-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.artist-type {
+  display: inline-block;
+  padding: 5px 14px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 12px;
+  width: fit-content;
+  letter-spacing: 0.5px;
+}
+
+.artist-name {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.artist-stats {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* 搜索栏 */
+.artist-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 22px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  margin-bottom: 28px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.artist-search-bar:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+.artist-search-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.artist-search-input {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 15px;
+  outline: none;
+}
+
+.artist-search-input::placeholder {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.artist-search-clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.artist-search-clear:hover {
+  color: var(--text-primary);
+  background: var(--bg-card-hover);
+}
+
+/* 歌曲区域 */
+.artist-song-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.artist-song-header {
+  padding: 20px 28px 14px;
+}
+
+.artist-song-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* 歌曲列表 */
+.artist-song-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.artist-song-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 28px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.artist-song-row:hover {
+  background: var(--bg-card-hover);
+}
+
+.artist-song-row:hover .artist-song-play-btn {
+  opacity: 1;
+}
+
+.artist-song-num {
+  width: 32px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.artist-song-cover {
+  width: 46px;
+  height: 46px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--bg-card-hover);
+}
+
+.artist-song-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.artist-song-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.artist-song-meta {
+  font-size: 12px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.artist-song-duration {
+  font-size: 12px;
+  color: var(--text-muted);
+  min-width: 48px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.artist-song-play-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.artist-song-play-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 16px rgba(29, 185, 84, 0.4);
+}
+
+/* 加载/空/错误 */
+.artist-loading,
+.artist-error,
+.artist-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 20px;
+  gap: 16px;
+  color: var(--text-secondary);
+}
+
+.artist-loading .loading-spinner {
+  width: 44px;
+  height: 44px;
+  border: 3px solid var(--bg-card-hover);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: artistSpin 0.8s linear infinite;
+}
+
+@keyframes artistSpin { to { transform: rotate(360deg); } }
+
+.artist-retry-btn,
+.artist-clear-btn {
+  padding: 10px 24px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.artist-retry-btn:hover,
+.artist-clear-btn:hover {
+  background: var(--primary-dark);
+}
+
+.artist-empty-icon {
+  display: flex;
+  color: var(--text-muted);
+}
+
+/* 响应式 */
+@media (max-width: 1200px) {
+  .artist-page { padding: 24px 24px 80px; }
+}
+
+@media (max-width: 768px) {
+  .artist-page { padding: 16px 16px 80px; }
+
+  .artist-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+    padding: 24px;
+  }
+
+  .artist-header-avatar { width: 130px; height: 130px; }
+  .artist-name { font-size: 26px; }
+  .artist-header-info { align-items: center; }
+
+  .artist-song-row { padding: 10px 18px; gap: 10px; }
+  .artist-song-num { width: 24px; font-size: 12px; }
+  .artist-song-cover { width: 38px; height: 38px; }
+  .artist-song-play-btn { width: 32px; height: 32px; opacity: 1; }
+}
+
+@media (max-width: 480px) {
+  .artist-header-avatar { width: 100px; height: 100px; }
+  .artist-name { font-size: 22px; }
+  .artist-song-play-btn { width: 28px; height: 28px; opacity: 1; }
+}

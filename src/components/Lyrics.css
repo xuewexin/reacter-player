@@ -1,0 +1,83 @@
+/* =====================================================
+   Lyrics — 三态叠加效果（已播放/当前/未播放）
+   ===================================================== */
+
+.lyrics-panel-v2 {
+  width: 100%;
+  height: 100%;
+  max-height: calc(100vh - 240px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 40px 0;
+  /* 遮罩营造上下渐隐 */
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0,0,0,0.3) 8%,
+    black 20%,
+    black 80%,
+    rgba(0,0,0,0.3) 92%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0,0,0,0.3) 8%,
+    black 20%,
+    black 80%,
+    rgba(0,0,0,0.3) 92%,
+    transparent 100%
+  );
+}
+
+.lyrics-panel-v2::-webkit-scrollbar { width: 0; }
+
+.lrc-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 20px;
+}
+
+.lrc-line-v2 {
+  padding: 10px 16px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.28);
+  cursor: pointer;
+  transition: all 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  user-select: none;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.lrc-line-v2:hover {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* 已播放行 — 半透明 */
+.lrc-line-v2.played {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 15px;
+}
+
+/* 当前行 — 高亮大字 */
+.lrc-line-v2.active {
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  text-shadow: 0 0 20px rgba(255,255,255,0.2);
+}
+
+/* 末尾留白 */
+.lrc-spacer {
+  height: 45vh;
+}
+
+/* 空状态 */
+.lrc-empty-v2 {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.3);
+  padding: 80px 0;
+  font-size: 15px;
+}

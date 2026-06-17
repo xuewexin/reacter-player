@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cover Flow 3D 轮播</title>
+<style>
+/* ============================================================
+   Cover Flow 3D 轮播 — 完整样式
+   居中放大 + Y轴旋转 + 边缘渐隐 + 模糊
+   ============================================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+    'Microsoft YaHei', sans-serif;
+  background: #f0f2f5;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- 外层容器 ---- */
+.coverflow {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.coverflow:active { cursor: grabbing; }
+
+/* ---- 3D 舞台（perspective 在此生效） ---- */
+.coverflow-stage {
+  position: relative;
+  width: 100%;
+  height: 440px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1100px;
+  transform-style: preserve-3d;
+}
+
+/* ============================================================
+   卡片 — 绝对定位 + 3D transform
+   ============================================================ */
+
+.coverflow-card {
+  position: absolute;
+  width: 560px;
+  max-width: 80vw;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  transform-origin: center center;
+  transition:
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity    0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    filter     0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s ease;
+  cursor: pointer;
+}
+
+/* 激活卡片 — 上浮阴影 */
+.coverflow-card.is-active {
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.18),
+    0 2px 8px  rgba(0,0,0,0.06);
+}
+
+/* ---- 图片区 ---- */
+.coverflow-card-img {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  overflow: hidden;
+  background: #e8eaed;
+}
+
+.coverflow-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.coverflow-card.is-active:hover .coverflow-card-img img {
+  transform: scale(1.04);
+}
+
+/* 播放按钮 — 仅激活卡片显示 */
+.coverflow-play-btn {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #1db954;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(29,185,84,0.45);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.35s cubic-bezier(0.22,1,0.36,1);
+  z-index: 5;
+}
+
+.coverflow-card.is-active .coverflow-play-btn { opacity: 1; transform: translateY(0); }
+.coverflow-card.is-active:hover .coverflow-play-btn { transform: scale(1.08); }
+
+/* ---- 文字区 ---- */
+.coverflow-card-body {
+  padding: 20px 24px 22px;
+}
+
+.coverflow-card-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  background: #1db954;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  letter-spacing: 0.4px;
+}
+
+.coverflow-card-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+  line-height: 1.25;
+}
+
+.coverflow-card-subtitle {
+  font-size: 13px;
+  color: #888;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ============================================================
+   边缘渐隐遮罩 — 让两侧卡片自然融入背景
+   ============================================================ */
+
+.coverflow-edge-left,
+.coverflow-edge-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 180px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.coverflow-edge-left {
+  left: 0;
+  background: linear-gradient(to right, #f0f2f5 0%, transparent 100%);
+}
+
+.coverflow-edge-right {
+  right: 0;
+  background: linear-gradient(to left, #f0f2f5 0%, transparent 100%);
+}
+
+/* ============================================================
+   左右箭头
+   ============================================================ */
+
+.coverflow-arrow {
+  position: absolute;
+  top: 42%;
+  transform: translateY(-50%);
+  z-index: 30;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+
+.coverflow:hover .coverflow-arrow { opacity: 0.85; }
+.coverflow-arrow:hover { opacity: 1 !important; background: #f5f5f5; border-color: #1db954; transform: translateY(-50%) scale(1.08); }
+.coverflow-arrow-left  { left:  10px; }
+.coverflow-arrow-right { right: 10px; }
+
+/* ============================================================
+   分页器
+   ============================================================ */
+
+.coverflow-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.coverflow-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: #ccc;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
+  padding: 0;
+}
+
+.coverflow-dot:hover { background: #999; }
+
+.coverflow-dot.is-active {
+  width: 28px;
+  border-radius: 5px;
+  background: #1db954;
+  box-shadow: 0 2px 8px rgba(29,185,84,0.4);
+}
+
+/* ============================================================
+   响应式
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .coverflow-stage { height: 370px; }
+  .coverflow-card { width: 440px; max-width: 78vw; border-radius: 14px; }
+  .coverflow-card-img { height: 210px; }
+  .coverflow-card-body { padding: 16px 18px 18px; }
+  .coverflow-card-title { font-size: 17px; }
+  .coverflow-play-btn { width: 42px; height: 42px; }
+  .coverflow-edge-left, .coverflow-edge-right { width: 100px; }
+  .coverflow-arrow { width: 40px; height: 40px; opacity: 0.7; }
+}
+
+@media (max-width: 600px) {
+  .coverflow-stage { height: 310px; }
+  .coverflow-card { width: 300px; max-width: 75vw; border-radius: 12px; }
+  .coverflow-card-img { height: 160px; }
+  .coverflow-card-body { padding: 12px 14px 14px; }
+  .coverflow-card-title { font-size: 15px; }
+  .coverflow-card-subtitle { font-size: 11px; }
+  .coverflow-card-tag { font-size: 10px; padding: 3px 8px; }
+  .coverflow-play-btn { width: 36px; height: 36px; bottom: 10px; right: 10px; }
+  .coverflow-edge-left, .coverflow-edge-right { width: 60px; }
+  .coverflow-arrow { width: 34px; height: 34px; }
+  .coverflow-arrow-left  { left: 4px; }
+  .coverflow-arrow-right { right: 4px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     Cover Flow 轮播 HTML 结构
+     ============================================================ -->
+<div class="coverflow" id="coverflow">
+
+  <!-- 3D 舞台 — 卡片将通过 JS 动态插入此处 -->
+  <div class="coverflow-stage" id="coverflowStage"></div>
+
+  <!-- 边缘渐隐 -->
+  <div class="coverflow-edge-left"></div>
+  <div class="coverflow-edge-right"></div>
+
+  <!-- 左右箭头 -->
+  <button class="coverflow-arrow coverflow-arrow-left"  id="arrowPrev" aria-label="上一张">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <button class="coverflow-arrow coverflow-arrow-right" id="arrowNext" aria-label="下一张">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+
+  <!-- 分页器 -->
+  <div class="coverflow-pagination" id="coverflowDots"></div>
+</div>
+
+<script>
+/* ============================================================
+   Cover Flow 3D 轮播 — 完整 JavaScript
+   纯原生实现，无任何外部依赖
+   ============================================================ */
+
+(function() {
+  'use strict';
+
+  // ==================== 数据（在这里修改卡片内容） ====================
+  var items = [
+    {
+      image: 'https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?w=800&h=450&fit=crop&q=80',
+      tag: '热门推荐',
+      title: '华语热门精选',
+      subtitle: '最受欢迎的华语歌曲合集，周杰伦、林俊杰、陈奕迅热门单曲'
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800&h=450&fit=crop&q=80',
+      tag: '新歌速递',
+      title: '最新音乐作品',
+      subtitle: '本周最新上线的音乐，发现新鲜好声音'
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&h=450&fit=crop&q=80',
+      tag: '原创力量',
+      title: '原创音乐人佳作',
+      subtitle: '独立音乐人精选作品，听见不一样的原创声音'
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&h=450&fit=crop&q=80',
+      tag: '飙升榜单',
+      title: '热度飙升最快',
+      subtitle: '实时飙升榜，热度上升最快的歌曲都在这里'
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=800&h=450&fit=crop&q=80',
+      tag: '经典回顾',
+      title: '那些年的经典',
+      subtitle: '经典老歌回顾，重温那些年我们一起听过的旋律'
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&h=450&fit=crop&q=80',
+      tag: '独立音乐',
+      title: '发现宝藏音乐人',
+      subtitle: '小众但不平庸，发现独一无二的音乐风格'
+    }
+  ];
+
+  // ==================== 配置 ====================
+  var INTERVAL = 4000;     // 自动轮播间隔(ms)，0 禁用
+  var MAX_VISIBLE = 3;     // 中心两侧各显示 N 张（总共 2N+1 张可见）
+
+  // ==================== DOM 引用 ====================
+  var stage   = document.getElementById('coverflowStage');
+  var dotsEl  = document.getElementById('coverflowDots');
+  var arrowPrev = document.getElementById('arrowPrev');
+  var arrowNext = document.getElementById('arrowNext');
+  var wrap    = document.getElementById('coverflow');
+
+  // ==================== 状态 ====================
+  var active  = 0;
+  var total   = items.length;
+  var paused  = false;
+  var dragging = false;
+  var dragStartX = 0;
+  var dragDelta  = 0;
+  var timer   = null;
+  var cards   = [];       // { el, offset, index }
+
+  // ==================== 初始化 DOM ====================
+
+  function buildCards() {
+    stage.innerHTML = '';
+    cards = [];
+    items.forEach(function(item, i) {
+      var card = document.createElement('div');
+      card.className = 'coverflow-card';
+      card.setAttribute('data-index', i);
+      card.innerHTML =
+        '<div class="coverflow-card-img">' +
+          '<img src="' + item.image + '" alt="" loading="lazy">' +
+          '<div class="coverflow-play-btn">' +
+            '<svg width="20" height="20" viewBox="0 0 24 24" fill="white"><polygon points="8,5 19,12 8,19"/></svg>' +
+          '</div>' +
+        '</div>' +
+        '<div class="coverflow-card-body">' +
+          (item.tag ? '<span class="coverflow-card-tag">' + item.tag + '</span>' : '') +
+          '<h3 class="coverflow-card-title">' + item.title + '</h3>' +
+          (item.subtitle ? '<p class="coverflow-card-subtitle">' + item.subtitle + '</p>' : '') +
+        '</div>';
+      stage.appendChild(card);
+    });
+  }
+
+  function buildDots() {
+    dotsEl.innerHTML = '';
+    for (var i = 0; i < total; i++) {
+      var dot = document.createElement('button');
+      dot.className = 'coverflow-dot';
+      dot.setAttribute('aria-label', '第 ' + (i + 1) + ' 张');
+      dot.addEventListener('click', (function(idx) {
+        return function() { goTo(idx); };
+      })(i));
+      dotsEl.appendChild(dot);
+    }
+  }
+
+  // ==================== 核心：计算 3D 样式 ====================
+
+  function getCardStyle(offset) {
+    var abs  = Math.abs(offset);
+    var sign = offset > 0 ? 1 : offset < 0 ? -1 : 0;
+
+    /* 参数说明（可根据需要微调）：
+       translateX : 水平位移百分比，控制卡片间距
+       translateZ : Z轴深度(px)，正值靠近屏幕、负值推远
+       rotateY    : Y轴旋转角度(deg)，产生透视弯曲
+       scale      : 缩放比例
+       opacity    : 不透明度
+       blur       : 高斯模糊，边缘卡片做虚化
+    */
+
+    var tx     = sign * abs * 56;                    // 水平偏移(%)
+    var tz     = -abs * 200;                          // Z深度(px)
+    var ry     = sign * abs * 26;                     // Y旋转(deg)
+    var scale  = Math.max(0.55, 1 - abs * 0.17);      // 缩放
+    var alpha  = Math.max(0.08, 1 - abs * 0.33);      // 透明度
+    var blur   = abs >= 2 ? 'blur(' + ((abs - 1) * 4) + 'px)' : 'none';
+    var bright = abs >= 2 ? Math.max(0.45, 1 - (abs - 1) * 0.3) : 1;
+    var zIdx   = 20 - abs;
+
+    return {
+      transform: 'translateX(' + tx + '%) translateZ(' + tz + 'px) rotateY(' + ry + 'deg) scale(' + scale + ')',
+      opacity: alpha,
+      zIndex: zIdx,
+      filter: blur === 'none'
+        ? 'brightness(' + bright + ')'
+        : blur + ' brightness(' + bright + ')',
+      pointerEvents: abs === 0 ? 'auto' : 'none'
+    };
+  }
+
+  // ==================== 环形偏移计算 ====================
+
+  function getOffset(i) {
+    var diff = i - active;
+    if (total > 2) {
+      if (diff >  total / 2) diff -= total;
+      if (diff < -total / 2) diff += total;
+    }
+    if (Math.abs(diff) > MAX_VISIBLE) return null;
+    return diff;
+  }
+
+  // ==================== 渲染 ====================
+
+  function render() {
+    var allCards = stage.querySelectorAll('.coverflow-card');
+    allCards.forEach(function(card, i) {
+      var offset = getOffset(i);
+      if (offset === null) {
+        card.style.display = 'none';
+        return;
+      }
+      card.style.display = '';
+
+      var isActive = offset === 0;
+      var style = getCardStyle(offset);
+
+      card.style.transform       = style.transform;
+      card.style.opacity         = style.opacity;
+      card.style.zIndex          = style.zIndex;
+      card.style.filter          = style.filter;
+      card.style.pointerEvents   = style.pointerEvents;
+
+      if (isActive) {
+        card.classList.add('is-active');
+      } else {
+        card.classList.remove('is-active');
+      }
+    });
+
+    // 更新分页器
+    var dots = dotsEl.querySelectorAll('.coverflow-dot');
+    dots.forEach(function(dot, i) {
+      if (i === active) dot.classList.add('is-active');
+      else dot.classList.remove('is-active');
+    });
+  }
+
+  // ==================== 导航 ====================
+
+  function goTo(idx) {
+    idx = ((idx % total) + total) % total;
+    if (idx === active) return;
+    active = idx;
+    render();
+  }
+
+  function next() { goTo(active + 1); }
+  function prev() { goTo(active - 1); }
+
+  // ==================== 自动轮播 ====================
+
+  function startTimer() {
+    stopTimer();
+    if (!INTERVAL || total <= 1) return;
+    timer = setInterval(next, INTERVAL);
+  }
+
+  function stopTimer() {
+    if (timer) { clearInterval(timer); timer = null; }
+  }
+
+  // ==================== 拖拽 / 触摸 ====================
+
+  function onPointerDown(e) {
+    dragging = true;
+    dragStartX = e.clientX;
+    dragDelta = 0;
+    wrap.setPointerCapture(e.pointerId);
+  }
+
+  function onPointerMove(e) {
+    if (!dragging) return;
+    dragDelta = e.clientX - dragStartX;
+    // 轻微跟手偏移（可选，这里仅做判断）
+    stage.style.transition = 'none';
+    stage.style.transform = 'translateX(' + (dragDelta * 0.5) + 'px)';
+  }
+
+  function onPointerUp(e) {
+    if (!dragging) return;
+    dragging = false;
+    stage.style.transition = '';
+    stage.style.transform = '';
+
+    if (dragDelta < -60) next();
+    else if (dragDelta > 60) prev();
+
+    dragDelta = 0;
+    wrap.releasePointerCapture(e.pointerId);
+  }
+
+  // ==================== 事件绑定 ====================
+
+  arrowPrev.addEventListener('click', prev);
+  arrowNext.addEventListener('click', next);
+
+  // 点击卡片：非激活跳转，激活触发操作
+  stage.addEventListener('click', function(e) {
+    if (Math.abs(dragDelta) > 5) return;
+    var card = e.target.closest('.coverflow-card');
+    if (!card) return;
+    var idx = parseInt(card.getAttribute('data-index'), 10);
+    if (idx === active) {
+      // 点击激活卡片 → 跳转到该 Banner 的详情（在此修改跳转逻辑）
+      console.log('点击激活卡片:', items[idx].title);
+    } else {
+      goTo(idx);
+    }
+  });
+
+  // 拖拽
+  wrap.addEventListener('pointerdown', onPointerDown);
+  wrap.addEventListener('pointermove', onPointerMove);
+  wrap.addEventListener('pointerup',   onPointerUp);
+  wrap.addEventListener('pointercancel', onPointerUp);
+
+  // 悬停暂停
+  wrap.addEventListener('mouseenter', function() { paused = true;  stopTimer(); });
+  wrap.addEventListener('mouseleave', function() { paused = false; startTimer(); });
+
+  // 键盘
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft')  prev();
+    if (e.key === 'ArrowRight') next();
+  });
+
+  // ==================== 启动 ====================
+
+  buildCards();
+  buildDots();
+  render();
+  startTimer();
+
+  console.log('Cover Flow 3D 轮播已就绪 — ' + total + ' 张卡片');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+/* 登录页背景 */
+.login-container::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image: url('/bg-login.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(0.4);
+}
+
+/* 暗色遮罩 */
+.login-container::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 100%);
+}
+
+[data-theme="light"] .login-container::before {
+  filter: brightness(0.6);
+}
+
+/* 表单层级 */
+.login-container > * {
+  position: relative;
+  z-index: 1;
+}
