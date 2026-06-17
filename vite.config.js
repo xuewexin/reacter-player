@@ -1,11 +1,7 @@
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), 'VITE_')
-  const aliApiKey = env.VITE_ALIYUN_API_KEY || ''
-
-  return {
+export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
@@ -63,18 +59,6 @@ export default defineConfig(({ mode }) => {
         rewrite: (path) => path.replace(/^\/api\/lxsource/, ''),
         headers: { Referer: 'https://lxmusicapi.onrender.com/' },
       },
-      // AI 智能推荐 — 阿里云百炼大模型
-      '/api/ai': {
-        target: 'https://dashscope.aliyuncs.com',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/ai/, '/compatible-mode/v1/chat/completions'),
-        configure: (proxy) => {
-          proxy.on('proxyReq', (proxyReq) => {
-            proxyReq.setHeader('Authorization', `Bearer ${aliApiKey}`)
-          })
-        },
-      },
     },
   },
-  }
 })
